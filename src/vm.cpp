@@ -39,14 +39,14 @@ void VM::scanCb(const sensor_msgs::msg::LaserScan::SharedPtr scan)
   cv::cvtColor(binr, dstr, cv::COLOR_GRAY2BGR);
 	// 각 객체 영역에 바운딩 박스 표시하기
   cv::circle(img, cv::Point(LENGTH/2, LENGTH/2), 2, cv::Scalar(0, 0, 0), 2);
-  ldmin = sqrt(double((LENGTH/2-ROI-statsl.at<int>(1, 0)-statsl.at<int>(1, 2)))*double((LENGTH/2-ROI-statsl.at<int>(1, 0)-statsl.at<int>(1, 2)))+double((LENGTH/2-ROI-statsl.at<int>(1, 1)-statsl.at<int>(1, 3)))*double((LENGTH/2-ROI-statsl.at<int>(1, 1)-statsl.at<int>(1, 3))));
-  rdmin = sqrt(double(statsr.at<int>(1, 0)*statsr.at<int>(1, 0))+double((LENGTH/2-ROI-statsr.at<int>(1, 1)-statsr.at<int>(1, 3)))*double((LENGTH/2-ROI-statsr.at<int>(1, 1)-statsr.at<int>(1, 3))));
+  ldmin = sqrt((LENGTH/2-statsl.at<int>(1, 0)-statsl.at<int>(1, 2))*(LENGTH/2-statsl.at<int>(1, 0)-statsl.at<int>(1, 2))+(LENGTH/2-statsl.at<int>(1, 1)-statsl.at<int>(1, 3))*(LENGTH/2-statsl.at<int>(1, 1)-statsl.at<int>(1, 3)));
+  rdmin = sqrt(statsr.at<int>(1, 0)*(statsr.at<int>(1, 0))+(LENGTH/2-statsr.at<int>(1, 1)-statsr.at<int>(1, 3))*(LENGTH/2-statsr.at<int>(1, 1)-statsr.at<int>(1, 3)));
 	for (int i = 1;i < cntl;i++) {
 		int* p = statsl.ptr<int>(i);
     
 		cv::rectangle(img, cv::Rect(p[0]+ROI, p[1]+ROI, p[2], p[3]), cv::Scalar(255, 0, 0)), 2; // x,y,가로,세로 크기
-    if(ldmin > sqrt(double((LENGTH/2-ROI-p[0]-p[2]))*double((LENGTH/2-ROI-p[0]-p[2]))+double((LENGTH/2-ROI-p[1]-p[3]))*double((LENGTH/2-ROI-p[1]-p[3])))){
-      ldmin = sqrt(double((LENGTH/2-ROI-p[0]-p[2]))*double((LENGTH/2-ROI-p[0]-p[2]))+double((LENGTH/2-ROI-p[1]-p[3]))*double((LENGTH/2-ROI-p[1]-p[3])));
+    if(ldmin > sqrt((LENGTH/2-ROI-p[0]-p[2])*(LENGTH/2-ROI-p[0]-p[2])+(LENGTH/2-ROI-p[1]-p[3])*(LENGTH/2-ROI-p[1]-p[3]))){
+      ldmin = sqrt((LENGTH/2-ROI-p[0]-p[2])*(LENGTH/2-ROI-p[0]-p[2])+(LENGTH/2-ROI-p[1]-p[3])*(LENGTH/2-ROI-p[1]-p[3]));
       lx = p[0];
       ly = p[1];
       lw = p[2];
@@ -58,8 +58,8 @@ void VM::scanCb(const sensor_msgs::msg::LaserScan::SharedPtr scan)
 		int* p = statsr.ptr<int>(j);
      
 		cv::rectangle(img, cv::Rect(p[0]+LENGTH/2, p[1]+ROI, p[2], p[3]), cv::Scalar(255, 0, 255)), 2; // x,y,가로,세로 크기
-    if(rdmin > sqrt(double(p[0]*p[0])+double((LENGTH/2-ROI-p[1]-p[3]))*double((LENGTH/2-ROI-p[1]-p[3])))){
-      rdmin = sqrt(double(p[0]*p[0])+double((LENGTH/2-ROI-p[1]-p[3]))*double((LENGTH/2-ROI-p[1]-p[3])));
+    if(rdmin > sqrt(p[0]*p[0]+(LENGTH/2-ROI-p[1]-p[3])*(LENGTH/2-ROI-p[1]-p[3]))){
+      rdmin = sqrt(p[0]*p[0]+(LENGTH/2-ROI-p[1]-p[3])*(LENGTH/2-ROI-p[1]-p[3]));
       rx = p[0];
       ry = p[1];
       rw = p[2];
