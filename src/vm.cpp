@@ -108,8 +108,10 @@ void VM::scanCb(const sensor_msgs::msg::LaserScan::SharedPtr scan)
   if(ldmin <= 50&&rdmin <= 50&&RAD2DEG(ltheta)>80&&RAD2DEG(rtheta)>80)err = 100;
   else if(ldmin <= 50&&RAD2DEG(rtheta)>80)err = 200;
   else if(rdmin <= 50&&RAD2DEG(ltheta)>80)err = 300;
-  else if(ldmin <= 17&&rdmin > 17)err = 400;
-  else if(rdmin <= 17&&ldmin > 17)err = 500;
+  else if(ldmin <= 20&&rdmin > 20)err = 400;
+  else if(rdmin <= 20&&ldmin > 20)err = 500;
+  else if(ldmin <= 10&&ldmin < rdmin)err = 600;
+  else if(rdmin <= 10&&rdmin < ldmin)err = 700;
   else err = (RAD2DEG(ltheta)-RAD2DEG(rtheta))/2;
 
   //err1=RAD2DEG(acos(200*cos(rtheta/2-ltheta/2)/200));
