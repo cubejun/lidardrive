@@ -17,7 +17,7 @@ class Sub : public rclcpp::Node
         rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr sub_;
         void mysub_callback(Dxl& mdxl, const std_msgs::msg::Int32::SharedPtr intmsg);
         
-        double gain = 0.7;
+        double gain = 1;//50rpm0.7;
     public:
         Sub();
         Dxl dxl;
