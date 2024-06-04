@@ -20,32 +20,32 @@ void Sub::mysub_callback(Dxl& mdxl, const std_msgs::msg::Int32::SharedPtr intmsg
 	    rvel = 100;//오른쪽 바퀴 속도
     }
     else  if(err == 200){
-        lvel = 50;//왼쪽 바퀴 속도
-	    rvel = 50;//오른쪽 바퀴 속도
+        lvel = 100;//왼쪽 바퀴 속도
+	    rvel = 100;//오른쪽 바퀴 속도
     }
     else  if(err == 300){
-        lvel = -50;//왼쪽 바퀴 속도
-	    rvel = -50;//오른쪽 바퀴 속도
+        lvel = -100;//왼쪽 바퀴 속도
+	    rvel = -100;//오른쪽 바퀴 속도
     }
     else  if(err == 400){
-        lvel = 50;//왼쪽 바퀴 속도
-	    rvel = 50;//오른쪽 바퀴 속도
+        lvel = 100;//왼쪽 바퀴 속도
+	    rvel = 100;//오른쪽 바퀴 속도
     }
     else  if(err == 500){
-        lvel = -50;//왼쪽 바퀴 속도
-	    rvel = -50;//오른쪽 바퀴 속도
+        lvel = -100;//왼쪽 바퀴 속도
+	    rvel = -100;//오른쪽 바퀴 속도
     }
     else  if(err == 600){
-        lvel = 80;//왼쪽 바퀴 속도
-	    rvel = 80;//오른쪽 바퀴 속도
+        lvel = 100;//왼쪽 바퀴 속도
+	    rvel = 100;//오른쪽 바퀴 속도
     }
     else  if(err == 700){
-        lvel = -80;//왼쪽 바퀴 속도
-	    rvel = -80;//오른쪽 바퀴 속도
+        lvel = -100;//왼쪽 바퀴 속도
+	    rvel = -100;//오른쪽 바퀴 속도
     }
     else {
-        lvel = 50 - gain * -err;//왼쪽 바퀴 속도
-	    rvel = -(52 + gain * -err);//오른쪽 바퀴 속도
+        lvel = 100 - gain * -err;//왼쪽 바퀴 속도
+	    rvel = -(102 + gain * -err);//오른쪽 바퀴 속도
     }
 
     RCLCPP_INFO(this->get_logger(), "Received message: %d %d", lvel, rvel);
