@@ -1,7 +1,7 @@
 #include "lidardrive/vm.hpp"
 VM::VM() : Node("mysub")
 {
-  writer1.open("avoid123.mp4", cv::VideoWriter::fourcc('D', 'I', 'V', 'X'), 30, cv::Size(500, 500));
+  writer1.open("avoid123.mp4", cv::VideoWriter::fourcc('D', 'I', 'V', 'X'), 10, cv::Size(LENGTH, LENGTH));
   lidar_info_sub = this->create_subscription<sensor_msgs::msg::LaserScan>("scan", rclcpp::SensorDataQoS(), std::bind(&VM::scanCb, this, _1));
 
   pub_ = this->create_publisher<std_msgs::msg::Int32>("err", rclcpp::SensorDataQoS());
@@ -21,6 +21,7 @@ void VM::scanCb(const sensor_msgs::msg::LaserScan::SharedPtr scan)
     y = LENGTH/2 + scan->ranges[i]*XXX * cos(degree*M_PI/180);
     cv::circle(img, cv::Point(x, y), 1, cv::Scalar(0, 0, 255), 2);
   }
+
   cv::Mat grayl, grayr;
   cv::Mat ROIL = img(cv::Rect(ROI, ROI, LENGTH/2-ROI, LENGTH/2-ROI));
   cv::Mat ROIR = img(cv::Rect(LENGTH/2+1, ROI, LENGTH/2-ROI+1, LENGTH/2-ROI));
@@ -43,7 +44,7 @@ void VM::scanCb(const sensor_msgs::msg::LaserScan::SharedPtr scan)
   rdmin = sqrt(statsr.at<int>(1, 0)*(statsr.at<int>(1, 0))+(LENGTH/2-statsr.at<int>(1, 1)-statsr.at<int>(1, 3))*(LENGTH/2-statsr.at<int>(1, 1)-statsr.at<int>(1, 3)));
 	for (int i = 1;i < cntl;i++) {
 		int* p = statsl.ptr<int>(i);
-    
+    if(p[4]<50)continue;
 		cv::rectangle(img, cv::Rect(p[0]+ROI, p[1]+ROI, p[2], p[3]), cv::Scalar(255, 0, 0)), 2; // x,y,가로,세로 크기
     if(ldmin > sqrt((LENGTH/2-ROI-p[0]-p[2])*(LENGTH/2-ROI-p[0]-p[2])+(LENGTH/2-ROI-p[1]-p[3])*(LENGTH/2-ROI-p[1]-p[3]))){
       ldmin = sqrt((LENGTH/2-ROI-p[0]-p[2])*(LENGTH/2-ROI-p[0]-p[2])+(LENGTH/2-ROI-p[1]-p[3])*(LENGTH/2-ROI-p[1]-p[3]));
@@ -56,7 +57,7 @@ void VM::scanCb(const sensor_msgs::msg::LaserScan::SharedPtr scan)
 	}
   for (int j = 1;j < cntr;j++) {
 		int* p = statsr.ptr<int>(j);
-     
+    if(p[4]<50)continue;
 		cv::rectangle(img, cv::Rect(p[0]+LENGTH/2, p[1]+ROI, p[2], p[3]), cv::Scalar(255, 0, 255)), 2; // x,y,가로,세로 크기
     if(rdmin > sqrt(p[0]*p[0]+(LENGTH/2-ROI-p[1]-p[3])*(LENGTH/2-ROI-p[1]-p[3]))){
       rdmin = sqrt(p[0]*p[0]+(LENGTH/2-ROI-p[1]-p[3])*(LENGTH/2-ROI-p[1]-p[3]));
@@ -106,12 +107,10 @@ void VM::scanCb(const sensor_msgs::msg::LaserScan::SharedPtr scan)
   printf("lx = %f, ly = %f\n", lx+lw+ROI, ly+lh+ROI);
   printf("rx = %f, ry = %f\n", rx+LENGTH/2, ry+rh+ROI);
   if(ldmin <= 50&&rdmin <= 50&&RAD2DEG(ltheta)>80&&RAD2DEG(rtheta)>80)err = 100;
-  else if(ldmin <= 50&&RAD2DEG(rtheta)>80)err = 200;
-  else if(rdmin <= 50&&RAD2DEG(ltheta)>80)err = 300;
+  else if(ldmin <= 40&&RAD2DEG(rtheta)>80)err = 200;
+  else if(rdmin <= 40&&RAD2DEG(ltheta)>80)err = 300;
   else if(ldmin <= 20&&rdmin > 20)err = 400;
   else if(rdmin <= 20&&ldmin > 20)err = 500;
-  else if(ldmin <= 10&&ldmin < rdmin)err = 600;
-  else if(rdmin <= 10&&rdmin < ldmin)err = 700;
   else err = (RAD2DEG(ltheta)-RAD2DEG(rtheta))/2;
 
   //err1=RAD2DEG(acos(200*cos(rtheta/2-ltheta/2)/200));
