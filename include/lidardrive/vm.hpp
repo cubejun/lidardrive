@@ -11,7 +11,7 @@
 #define RAD2DEG(x) ((x)*180./M_PI)
 #define LENGTH 800.0
 #define XXX 250.0
-#define ROI 250.0
+#define ROI 300.0
 using std::placeholders::_1;
 using namespace std::chrono_literals;
 class VM : public rclcpp::Node
