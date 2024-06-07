@@ -6,6 +6,9 @@
 에러값을 subscribe 해 다이나믹셀을 제어하는 jetson 실행파일을 
 하나의 lidardrive패키지로 만들었다.
 # 동작영상
+https://youtu.be/PftGyO2YzhE
+
+
 https://youtube.com/shorts/ICAtPBVJINk
 
 
